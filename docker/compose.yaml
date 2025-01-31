@@ -1,0 +1,38 @@
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: azurite
+    ports:
+      - "10000:10000"
+      - "[::1]:10000:10000"
+      - "10001:10001"
+      - "[::1]:10001:10001"
+      - "10002:10002"
+      - "[::1]:10002:10002"
+      - "8888:8888"
+      - "[::1]:8888:8888"
+    volumes:
+      - ../.azurite:/data
+
+    command: azurite --skipApiVersionCheck --loose --blobHost 0.0.0.0 --disableProductStyleUrl
+
+  delta:
+    image: deltaio/delta-docker:latest
+    container_name: delta
+    # this routes all requests to the azurite container
+    network_mode: service:azurite
+    depends_on:
+      - azurite
+    # environment:
+    #   - AZURE_STORAGE_ACCOUNT=devstoreaccount1
+    # networks:
+    #   deltanetwork:
+    # user: "999:999"
+    volumes:
+      - ../.home:/home/cicorias
+    # # privileged: true
+
+    # # sudo chown -R $(id -u):$(id -g) ../.home
+
+# networks:
+#   deltanetwork:
