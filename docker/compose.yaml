@@ -9,6 +9,7 @@ services:
       - "[::1]:10001:10001"
       - "10002:10002"
       - "[::1]:10002:10002"
+      # these two are for the jupyter notebook server in the delta container
       - "8888:8888"
       - "[::1]:8888:8888"
     volumes:
